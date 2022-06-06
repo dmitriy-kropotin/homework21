@@ -70,9 +70,10 @@ Connection closed by 127.0.0.1 port 2200
 Mon Jun  6 15:16:57 MSK 2022
 ```
 
-```
 
-```[root@pam21 ~]# cat /etc/pam.d/sshd
+
+```
+[root@pam21 ~]# cat /etc/pam.d/sshd
 #%PAM-1.0
 auth       substack     password-auth
 auth       include      postlogin
@@ -91,6 +92,8 @@ session    optional     pam_keyinit.so force revoke
 session    optional     pam_motd.so
 session    include      password-auth
 session    include      postlogin
+
+```
 
 ```
 [root@pam21 ~]# cat /usr/local/bin/test_login.sh
@@ -136,4 +139,18 @@ fi
 friday@localhost's password:
 /usr/local/bin/test_login.sh failed: exit code 1
 Connection closed by 127.0.0.1 port 2200
+```
+
+```
+[tesla@rocky8 homework21]$ ssh night@localhost -p 2200
+night@localhost's password:
+/usr/local/bin/test_login.sh failed: exit code 1
+Connection closed by 127.0.0.1 port 2200
+```
+
+```
+[tesla@rocky8 homework21]$ ssh day@localhost -p 2200
+day@localhost's password:
+Last login: Mon Jun  6 12:15:01 2022 from 10.0.2.2
+[day@pam21 ~]$
 ```

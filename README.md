@@ -60,9 +60,9 @@ day@localhost's password:
 ```
 
 ```
-[tesla@rocky8 homework21]$ ssh day@localhost -p 2200
-day@localhost's password:
-[day@pam21 ~]$
+[tesla@rocky8 homework21]$ ssh night@localhost -p 2200
+night@localhost's password:
+Connection closed by 127.0.0.1 port 2200
 ```
 
 ```

@@ -66,7 +66,7 @@ session    include      postlogin
 Mon Jun  6 15:16:57 MSK 2022
 ```
 
-6. Проверяю. Под day пускает
+6. Проверяю. Под `day` пускает
 
 ```
 [tesla@rocky8 homework21]$ ssh day@localhost -p 2200
@@ -74,7 +74,7 @@ day@localhost's password:
 [day@pam21 ~]$
 ```
 
-7. Под night не пускает
+7. Под `night` не пускает
 
 ```
 [tesla@rocky8 homework21]$ ssh night@localhost -p 2200
@@ -82,7 +82,7 @@ night@localhost's password:
 Connection closed by 127.0.0.1 port 2200
 ```
 
-8. Под friday не пускает. Модуль работае!
+8. Под `friday` не пускает. Модуль работает!
 
 ```
 [tesla@rocky8 homework21]$ ssh friday@localhost -p 2200

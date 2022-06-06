@@ -25,10 +25,10 @@ passwd: all authentication tokens updated successfully.
 ```
 [root@pam21 ~]# tail -n5 /etc/security/time.conf
 #
-#
 *;*;day;Al0800-2000
 *;*;night;!Al0800-2000
-*;*;friday;Fr
+*;*;friday;Fr0000-2400
+
 ```
 
 ```

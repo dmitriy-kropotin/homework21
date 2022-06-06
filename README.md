@@ -154,3 +154,71 @@ day@localhost's password:
 Last login: Mon Jun  6 12:15:01 2022 from 10.0.2.2
 [day@pam21 ~]$
 ```
+
+```
+[root@pam21 ~]# dnf install  pam_script
+Last metadata expiration check: 1:06:38 ago on Mon 06 Jun 2022 12:25:28 PM UTC.
+Dependencies resolved.
+========================================================================================================================================================
+ Package                               Architecture                      Version                                  Repository                       Size
+========================================================================================================================================================
+Installing:
+ pam_script                            x86_64                            1.1.9-7.el8                              epel                             34 k
+
+Transaction Summary
+========================================================================================================================================================
+Install  1 Package
+
+Total download size: 34 k
+Installed size: 63 k
+Is this ok [y/N]: y
+Downloading Packages:
+pam_script-1.1.9-7.el8.x86_64.rpm                                                                                       170 kB/s |  34 kB     00:00
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                    28 kB/s |  34 kB     00:01
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                                1/1
+  Installing       : pam_script-1.1.9-7.el8.x86_64                                                                                                  1/1
+  Running scriptlet: pam_script-1.1.9-7.el8.x86_64                                                                                                  1/1
+  Verifying        : pam_script-1.1.9-7.el8.x86_64                                                                                                  1/1
+
+Installed:
+  pam_script-1.1.9-7.el8.x86_64
+
+Complete!
+```
+
+```
+[root@pam21 ~]# cat /etc/pam.d/sshd
+#%PAM-1.0
+auth       substack     password-auth
+auth       include      postlogin
+account    required     pam_sepermit.so
+account    required     pam_nologin.so
+account    required     pam-script.so /usr/local/bin/test_login.sh
+account    include      password-auth
+password   include      password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    required     pam_namespace.so
+session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
+session    include      password-auth
+session    include      postlogin
+```
+
+```
+[tesla@rocky8 homework21]$ ssh friday@localhost -p 2200
+friday@localhost's password:
+Connection closed by 127.0.0.1 port 2200
+```
+
+
+

@@ -30,3 +30,42 @@ passwd: all authentication tokens updated successfully.
 *;*;night;!Al0800-2000
 *;*;friday;Fr
 ```
+
+```
+[root@pam21 ~]# cat /etc/pam.d/sshd
+#%PAM-1.0
+auth       substack     password-auth
+auth       include      postlogin
+account    required     pam_sepermit.so
+account    required     pam_nologin.so
+account    required     pam_time.so
+account    include      password-auth
+password   include      password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    required     pam_namespace.so
+session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
+session    include      password-auth
+session    include      postlogin
+```
+
+```
+[tesla@rocky8 homework21]$ ssh day@localhost -p 2200
+day@localhost's password:
+[day@pam21 ~]$
+```
+
+```
+[tesla@rocky8 homework21]$ ssh day@localhost -p 2200
+day@localhost's password:
+[day@pam21 ~]$
+```
+
+```
+[tesla@rocky8 homework21]$ date
+Mon Jun  6 15:16:57 MSK 2022
+```

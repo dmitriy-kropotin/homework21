@@ -255,3 +255,63 @@ session    include      password-auth
 session    include      postlogin
 ```
 
+```
+[day@pam21 ~]$ ncat -l -p 80
+Ncat: bind to :::80: Permission denied. QUITTING.
+```
+
+```
+[root@pam21 log]# cat /etc/pam.d/sshd
+#%PAM-1.0
+auth       substack     password-auth
+auth       include      postlogin
+auth       required     pam_cap.so
+account    required     pam_sepermit.so
+account    required     pam_nologin.so
+#account    required    pam_script.so dir=/usr/local/bin/
+account    include      password-auth
+password   include      password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    required     pam_namespace.so
+session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
+session    include      password-auth
+session    include      postlogin
+```
+
+```
+[root@pam21 log]# cat /etc/security/capability.conf
+cap_net_bind_service day
+```
+
+```
+[root@pam21 log]# setcap cap_net_bind_service=ei /usr/bin/ncat
+```
+
+```
+[day@pam21 ~]$ capsh --print
+Current: cap_net_bind_service=i
+```
+
+```
+[day@pam21 ~]$ ncat -l -p 80
+Make Linux great again!
+```
+
+```
+[root@pam21 log]# cat /etc/sudoers.d/day
+day ALL=(ALL) NOPASSWD: ALL
+```
+
+```
+[tesla@rocky8 homework21]$ ssh day@localhost -p 2200
+day@localhost's password:
+Last login: Mon Jun  6 14:15:13 2022 from 10.0.2.2
+[day@pam21 ~]$ sudo su -l
+Last login: Mon Jun  6 11:19:44 UTC 2022 on pts/0
+[root@pam21 ~]#
+```

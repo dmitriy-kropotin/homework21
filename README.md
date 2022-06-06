@@ -218,7 +218,40 @@ session    include      postlogin
 [tesla@rocky8 homework21]$ ssh friday@localhost -p 2200
 friday@localhost's password:
 Connection closed by 127.0.0.1 port 2200
+[tesla@rocky8 homework21]$ ssh day@localhost -p 2200
+day@localhost's password:
+Connection closed by 127.0.0.1 port 2200
 ```
 
+```
+[root@pam21 log]# cp /usr/local/bin/test_login.sh /usr/local/bin/pam_script_acct
+[root@pam21 log]# ls -la /usr/local/bin/
+total 8
+drwxr-xr-x.  2 root root  50 Jun  6 13:52 .
+drwxr-xr-x. 12 root root 131 May 21 20:03 ..
+-rwxr-xr-x.  1 root root 444 Jun  6 13:52 pam_script_acct
+-rwxr-xr-x.  1 root root 444 Jun  6 13:24 test_login.sh
+```
 
+```
+[root@pam21 log]# cat /etc/pam.d/sshd
+#%PAM-1.0
+auth       substack     password-auth
+auth       include      postlogin
+account    required     pam_sepermit.so
+account    required     pam_nologin.so
+account    required     pam_script.so dir=/usr/local/bin/
+account    include      password-auth
+password   include      password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    required     pam_namespace.so
+session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
+session    include      password-auth
+session    include      postlogin
+```
 
